@@ -24,6 +24,7 @@
    ```env
    LANGSMITH_TRACING=true
    LANGSMITH_API_KEY=your_langsmith_api_key
+   LANGSMITH_PROJECT=apex-harel
    ```
 
 4. Run the script to process the documents and set up the vector store:
