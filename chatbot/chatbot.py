@@ -13,6 +13,7 @@ llm = init_chat_model("gpt-4o-mini", model_provider="openai")
 
 
 class State(TypedDict):
+    category: str
     question: str
     context: List[Document]
     answer: str
@@ -20,7 +21,14 @@ class State(TypedDict):
 
 # Define application steps
 def retrieve(state: State):
-    retrieved_docs = vector_store.similarity_search(state["question"])
+    embedding = vector_store.embedding.embed_query(state["question"])
+    filter_text = f"data\\{state['category']}\\"
+    results = vector_store.similarity_search_with_score_by_vector(
+        embedding,
+        k=7,
+        filter=lambda doc: filter_text in doc.metadata.get("source", ""),
+    )
+    retrieved_docs = [doc for doc, _ in results]
     return {"context": retrieved_docs}
 
 
@@ -37,6 +45,9 @@ graph = graph_builder.compile()
 
 print("Application ready, asking a sample question...")
 response = graph.invoke(
-    {"question": "עבור ביטוח דירה, האם יש כיסוי למקרה נזק של מחשב נייד?"}
+    {
+        "question": "עבור ביטוח דירה, האם יש כיסוי למקרה נזק של מחשב נייד?",
+        "category": "apartment",
+    }
 )
 print(response["answer"])
