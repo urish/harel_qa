@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>צ'אטבוט הראל ביטוח</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>צ'אטבוט הראל ביטוח</h1>
+            <p class="subtitle">שאלו שאלות על מוצרי הביטוח שלנו</p>
+        </header>
+
+        <div class="chat-container">
+            <div class="category-selector">
+                <label for="category">בחרו קטגוריית ביטוח:</label>
+                <select id="category" required>
+                    <option value="">בחר קטגוריה...</option>
+                    <option value="apartment">ביטוח דירה</option>
+                    <option value="business">ביטוח עסקי</option>
+                    <option value="car">ביטוח רכב</option>
+                    <option value="health">ביטוח בריאות</option>
+                    <option value="life">ביטוח חיים</option>
+                    <option value="travel">ביטוח נסיעות</option>
+                </select>
+            </div>
+
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        שלום! אני כאן לעזור לך עם שאלות על מוצרי הביטוח של הראל. בחר קטגוריית ביטוח ושאל את שאלתך.
+                    </div>
+                </div>
+            </div>
+
+            <form id="chat-form" class="chat-input-container">
+                <input
+                    type="text"
+                    id="question"
+                    placeholder="הקלד את שאלתך כאן..."
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit" id="send-btn">שלח</button>
+            </form>
+
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <span>מחפש תשובה...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -102,10 +102,29 @@ def main():
         action="store_true",
         help="Run evaluation mode using evalset.json"
     )
+    parser.add_argument(
+        "--serve",
+        action="store_true",
+        help="Run the web server with API and web interface"
+    )
+    parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="Host to bind the server to (default: 0.0.0.0)"
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port to bind the server to (default: 8000)"
+    )
 
     args = parser.parse_args()
 
-    if args.eval:
+    if args.serve:
+        from server import run_server
+        run_server(host=args.host, port=args.port)
+    elif args.eval:
         evalset_path = Path(__file__).parent.parent / "eval" / "evalset.json"
         output_path = Path(__file__).parent.parent / "evalset-report.html"
         run_eval_mode(str(evalset_path), str(output_path))

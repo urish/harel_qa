@@ -6,3 +6,5 @@ langgraph
 markdown
 python-dotenv
 unstructured
+fastapi
+uvicorn[standard]

@@ -38,3 +38,11 @@
    ```bash
      python chatbot.py
    ```
+
+You can also run the web server to access the chatbot via a web interface:
+
+```bash
+ python chatbot/chatbot.py --serve
+```
+
+Then open your browser and navigate to `http://localhost:8000` to interact with the chatbot.
