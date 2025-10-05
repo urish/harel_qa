@@ -37,6 +37,8 @@ def load_documents_from_filesystem():
                         show_progress=True,
                     )
                     md_docs = md_loader.load()
+                    for doc in md_docs:
+                        doc.metadata["category"] = category_dir
                     all_documents.extend(md_docs)
                 except Exception as e:
                     print(f"Error loading markdown files from {docs_path}: {e}")
@@ -52,6 +54,8 @@ def load_documents_from_filesystem():
                         show_progress=True,
                     )
                     txt_docs = txt_loader.load()
+                    for doc in txt_docs:
+                        doc.metadata["category"] = category_dir
                     all_documents.extend(txt_docs)
                 except Exception as e:
                     print(f"Error loading text files from {pages_path}: {e}")
@@ -64,7 +68,7 @@ if __name__ == "__main__":
     print("Starting document indexing...")
     vector_store = InMemoryVectorStore(embeddings)
     docs = load_documents_from_filesystem()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=120)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     all_splits = text_splitter.split_documents(docs)
     print(f"Split into {len(all_splits)} chunks of text")
     _ = vector_store.add_documents(documents=all_splits)
