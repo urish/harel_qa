@@ -1,7 +1,7 @@
 langchain-community
 langchain-core
 langchain-text-splitters
-langchain[anthropic,openai]
+langchain[anthropic,google-genai,openai]
 langgraph
 markdown
 python-dotenv
