@@ -16,7 +16,7 @@
 3. Create a `.env` file in the root directory and add your API keys:
 
    ```env
-   OPENAI_API_KEY=your_openai_api_key
+   GOOGLE_API_KEY=your_google_api_key
    ```
 
    Optionally, you can also enable LangSmith logging by adding:
