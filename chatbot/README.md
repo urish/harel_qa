@@ -27,12 +27,28 @@
    LANGSMITH_PROJECT=apex-harel
    ```
 
+4. Run milvus db
+   Note: https://milvus.io/docs/install_standalone-docker.md
+
+   ```bash
+   # to start a milvus db instance
+   bash standalone_embed.sh start
+   ```
+
 4. Run the script to process the documents and set up the vector store:
 
+   Indexing whole documents 
    ```bash
     python index_docs.py
    ```
 
+   Indexing documents with page numbers (WIP!!)
+   ```bash
+   python index_docs_to_local_pages.py --input-dir ../data/data-original/ --output-dir ../data/data-processe-with-pages/d --no-ocr
+
+   python index_docs_to_milvus.py --input-dir ../data/data-processe-with-pages --collection-name documents
+   ```
+   
 5. Start the chatbot:
 
    ```bash
