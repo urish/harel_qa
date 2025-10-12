@@ -15,7 +15,7 @@ def load_documents_from_filesystem():
     print("Loading documents from filesystem using LangChain loaders...")
 
     # Get the data directory path (go up one level from chatbot folder)
-    data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+    data_dir = os.path.join(os.path.dirname(__file__), "..", "data", 'data-processed')
     data_dir = os.path.abspath(data_dir)
 
     all_documents = []
