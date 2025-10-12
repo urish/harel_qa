@@ -46,7 +46,7 @@
    ```bash
    python index_docs_to_local_pages.py --input-dir ../data/data-original/ --output-dir ../data/data-processe-with-pages/d --no-ocr
 
-   python index_docs_to_milvus.py --input-dir ../data/data-processe-with-pages --collection-name documents
+   python push_docs_to_milvus.py --input-dir ../data/data-processe-with-pages --collection-name documents
    ```
    
 5. Start the chatbot:
