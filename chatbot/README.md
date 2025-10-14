@@ -37,14 +37,16 @@
 
 4. Run the script to process the documents and set up the vector store:
 
-   Indexing whole documents 
+   *Option 1:*
+   Indexing whole documents (to local db)
    ```bash
     python index_docs.py
    ```
 
+   *Option 2:*
    Indexing documents with page numbers (WIP!!)
    ```bash
-   python index_docs_to_local_pages.py --input-dir ../data/data-original/ --output-dir ../data/data-processe-with-pages/d --no-ocr
+   python index_docs_to_local_pages.py --input-dir ../data/data-original/ --output-dir ../data/data-processe-with-pages/ --no-ocr
 
    python push_docs_to_milvus.py --input-dir ../data/data-processe-with-pages --collection-name documents
    ```
