@@ -33,4 +33,3 @@ sentence-transformers>=2.2.2
 langchain>=0.1.0
 pymilvus>=2.3.0
 langchain_milvus
-
