@@ -1,8 +1,9 @@
 import html
-import os
 import re
 from datetime import datetime
 from typing import Any, Dict, List
+
+from source_utils import format_display_filename
 
 
 def generate_html_report(results: List[Dict[str, Any]], output_path: str) -> None:
@@ -142,12 +143,8 @@ def generate_html_report(results: List[Dict[str, Any]], output_path: str) -> Non
                 source_file = source.get("source_file", "Unknown")
                 page_number = source.get("page_number", "Unknown")
 
-                # Extract just the last three parts of the path for brevity
-                filename = (
-                    os.sep.join(source_file.split(os.sep)[-3:])
-                    if os.sep in source_file
-                    else source_file
-                )
+                # Use server-side helper to format a display filename
+                filename = format_display_filename(source_file, max_parts=3)
 
                 # Check if this source was referenced in the answer
                 is_referenced = idx in referenced_docs

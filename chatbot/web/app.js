@@ -50,10 +50,7 @@ function addMessage(content, isUser = false, sources = null) {
             const isReferenced = referencedDocs.has(sourceNumber);
             sourceItem.className = `source-item${isReferenced ? ' referenced' : ''}`;
 
-            // Extract filename from path
-            const filename = source.source_file.split('/').pop();
-
-            sourceItem.textContent = `[${sourceNumber}] ${filename}, עמוד ${source.page_number}`;
+            sourceItem.textContent = `[${sourceNumber}] ${source.source_file}, עמוד ${source.page_number}`;
             sourcesDiv.appendChild(sourceItem);
         });
 
