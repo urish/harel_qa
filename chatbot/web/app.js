@@ -10,15 +10,56 @@ const sendBtn = document.getElementById('send-btn');
 const loadingIndicator = document.getElementById('loading');
 
 // Add message to chat
-function addMessage(content, isUser = false) {
+function addMessage(content, isUser = false, sources = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
 
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
+
+    // Preserve newlines in the content
+    messageContent.style.whiteSpace = 'pre-wrap';
     messageContent.textContent = content;
 
     messageDiv.appendChild(messageContent);
+
+    // Add sources if provided (bot messages only)
+    if (!isUser && sources && sources.length > 0) {
+        // Extract referenced document numbers from the answer
+        const referencedDocs = new Set();
+        const refPattern = /\[(\d+(?:\s*,\s*\d+)*)\]/g;
+        let match;
+        while ((match = refPattern.exec(content)) !== null) {
+            const nums = match[1].replace(/\s/g, '').split(',');
+            nums.forEach(n => {
+                if (n) referencedDocs.add(parseInt(n));
+            });
+        }
+
+        const sourcesDiv = document.createElement('div');
+        sourcesDiv.className = 'sources';
+
+        const sourcesLabel = document.createElement('div');
+        sourcesLabel.className = 'sources-label';
+        sourcesLabel.textContent = 'מקורות:';
+        sourcesDiv.appendChild(sourcesLabel);
+
+        sources.forEach((source, idx) => {
+            const sourceItem = document.createElement('div');
+            const sourceNumber = idx + 1;
+            const isReferenced = referencedDocs.has(sourceNumber);
+            sourceItem.className = `source-item${isReferenced ? ' referenced' : ''}`;
+
+            // Extract filename from path
+            const filename = source.source_file.split('/').pop();
+
+            sourceItem.textContent = `[${sourceNumber}] ${filename}, עמוד ${source.page_number}`;
+            sourcesDiv.appendChild(sourceItem);
+        });
+
+        messageDiv.appendChild(sourcesDiv);
+    }
+
     chatMessages.appendChild(messageDiv);
 
     // Scroll to bottom
@@ -53,7 +94,7 @@ async function sendQuestion(question, category) {
         }
 
         const data = await response.json();
-        return data.answer;
+        return data;
     } catch (error) {
         console.error('Error:', error);
         throw error;
@@ -83,12 +124,12 @@ chatForm.addEventListener('submit', async (e) => {
 
     try {
         // Send question and get answer
-        const answer = await sendQuestion(question, category);
+        const response = await sendQuestion(question, category);
 
-        // Add bot response
-        addMessage(answer, false);
+        // Add bot response with sources
+        addMessage(response.answer, false, response.sources);
     } catch (error) {
-        addMessage('מצטער, אירעה שגיאה. אנא נסה שוב.', false);
+        addMessage('מצטער, אירעה שגיאה. אנא נסה שוב.', false, null);
     } finally {
         setLoading(false);
         questionInput.focus();

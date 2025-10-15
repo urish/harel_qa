@@ -1,15 +1,18 @@
-from typing import List, Dict
+import html
+import os
+import re
 from datetime import datetime
+from typing import Any, Dict, List
 
 
-def generate_html_report(results: List[Dict[str, str]], output_path: str) -> None:
+def generate_html_report(results: List[Dict[str, Any]], output_path: str) -> None:
     """Generate an HTML report from evaluation results.
 
     Args:
         results: List of dictionaries containing evaluation results
         output_path: Path to save the HTML report
     """
-    html = f"""<!DOCTYPE html>
+    html_content = f"""<!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
     <meta charset="UTF-8">
@@ -94,6 +97,25 @@ def generate_html_report(results: List[Dict[str, str]], output_path: str) -> Non
             justify-content: center;
             margin-left: 10px;
         }}
+        .sources {{
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-right: 4px solid #6c757d;
+        }}
+        .source-item {{
+            padding: 5px 0;
+            font-size: 0.9em;
+        }}
+        .source-item.referenced {{
+            background-color: #fff3cd;
+            padding: 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }}
+        .answer-text {{
+            white-space: pre-wrap;
+        }}
     </style>
 </head>
 <body>
@@ -105,33 +127,68 @@ def generate_html_report(results: List[Dict[str, str]], output_path: str) -> Non
 """
 
     for i, result in enumerate(results, 1):
-        html += f"""
+        # Extract referenced document numbers from the answer
+        answer_text = result["actual_answer"]
+        referenced_docs = set()
+        for match in re.finditer(r"\[(\d+(?:\s*,\s*\d+)*)\]", answer_text):
+            nums = match.group(1).replace(" ", "").split(",")
+            referenced_docs.update(int(n) for n in nums if n.isdigit())
+
+        # Format sources
+        sources_html = ""
+        if "sources" in result and result["sources"]:
+            sources_html = '<div class="sources"><div class="label">מקורות:</div>'
+            for idx, source in enumerate(result["sources"], 1):
+                source_file = source.get("source_file", "Unknown")
+                page_number = source.get("page_number", "Unknown")
+
+                # Extract just the last three parts of the path for brevity
+                filename = (
+                    os.sep.join(source_file.split(os.sep)[-3:])
+                    if os.sep in source_file
+                    else source_file
+                )
+
+                # Check if this source was referenced in the answer
+                is_referenced = idx in referenced_docs
+                ref_class = "source-item referenced" if is_referenced else "source-item"
+
+                sources_html += f'<div class="{ref_class}">[{idx}] {html.escape(filename)}, עמוד {html.escape(str(page_number))}</div>'
+            sources_html += "</div>"
+
+        # Escape and preserve newlines in answers
+        escaped_answer = html.escape(answer_text)
+        escaped_expected = html.escape(result["expected_answer"])
+
+        html_content += f"""
     <div class="result">
         <div class="result-number">{i}</div>
-        <div class="question">{result['question']}</div>
+        <div class="question">{html.escape(result['question'])}</div>
 
         <div class="section">
             <span class="label">קטגוריה:</span>
-            <span class="category">{result['category']}</span>
+            <span class="category">{html.escape(result['category'])}</span>
         </div>
 
         <div class="expected">
             <div class="label">תשובה צפויה:</div>
-            <div>{result['expected_answer']}</div>
-            <div class="citation">{result['expected_citation']}</div>
+            <div class="answer-text">{escaped_expected}</div>
+            <div class="citation">{html.escape(result['expected_citation'])}</div>
         </div>
 
         <div class="actual">
             <div class="label">תשובה בפועל:</div>
-            <div>{result['actual_answer']}</div>
+            <div class="answer-text">{escaped_answer}</div>
         </div>
+
+        {sources_html}
     </div>
 """
 
-    html += """
+    html_content += """
 </body>
 </html>
 """
 
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(html)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(html_content)

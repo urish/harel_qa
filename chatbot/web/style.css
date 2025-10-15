@@ -131,6 +131,36 @@ header h1 {
     border-bottom-left-radius: 4px;
 }
 
+.sources {
+    margin-top: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    max-width: 80%;
+    font-size: 0.9rem;
+}
+
+.sources-label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.source-item {
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    color: #666;
+    border-radius: 4px;
+}
+
+.source-item.referenced {
+    background-color: #fff3cd;
+    font-weight: bold;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
 .chat-input-container {
     display: flex;
     gap: 10px;

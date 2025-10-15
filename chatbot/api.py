@@ -1,6 +1,6 @@
 """FastAPI application for the Harel chatbot."""
 
-from typing import List
+from typing import List, Dict, Any
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -12,10 +12,18 @@ class ChatRequest(BaseModel):
     category: str
 
 
+class Source(BaseModel):
+    source_file: str
+    page_number: str
+    content: str
+    metadata: Dict[str, Any]
+
+
 class ChatResponse(BaseModel):
     answer: str
     category: str
     question: str
+    sources: List[Source]
 
 
 def create_app(embeddings_function, llm) -> FastAPI:
@@ -61,6 +69,15 @@ def create_app(embeddings_function, llm) -> FastAPI:
                 answer=response.answer,
                 category=request.category,
                 question=request.question,
+                sources=[
+                    Source(
+                        source_file=s["source_file"],
+                        page_number=s["page_number"],
+                        content=s["content"],
+                        metadata=s["metadata"]
+                    )
+                    for s in response.sources
+                ],
             )
         except Exception as e:
             raise HTTPException(

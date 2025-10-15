@@ -44,6 +44,7 @@ def process_question(question_data: dict, question_num: int, total: int) -> dict
         "expected_answer": question_data["answer"],
         "expected_citation": question_data["citation"],
         "actual_answer": response.answer,
+        "sources": response.sources,
     }
 
 
