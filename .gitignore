@@ -4,3 +4,10 @@ __pycache__/
 harel_db.json
 .DS_Store
 evalset-report.html
+
+# Milvus generated files:
+user.yaml
+embedEtcd.yaml
+standalone.bat
+standalone_embed.sh
+chatbot/volumes

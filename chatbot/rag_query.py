@@ -10,6 +10,10 @@ This script:
 5. Returns the answer with source citations
 """
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import os
 import sys
 from typing import List, Dict, Any, Optional
@@ -142,7 +146,8 @@ Answer:"""
     return ChatPromptTemplate.from_template(template)
 
 def query_rag(question: str, collection_name: str, embedding_function, llm, 
-             k: int = 5, milvus_host: str = "localhost", milvus_port: int = 19530) -> QueryResult:
+              category: str = None,
+              k: int = 5, milvus_host: str = "localhost", milvus_port: int = 19530) -> QueryResult:
     """Perform RAG query: search, create context, and generate answer."""
     
     # 1. Search for relevant documents
