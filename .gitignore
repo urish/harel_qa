@@ -4,3 +4,4 @@ __pycache__/
 harel_db.json
 .DS_Store
 evalset-report.html
+chatbot/volumes
