@@ -137,9 +137,12 @@ Instructions:
 1. Answer the question based ONLY on the information provided in the context documents
 2. If the context doesn't contain enough information to answer the question, say so
 3. Cite your sources using the format [1], [2], etc. where the numbers correspond to the document citations
-4. Be concise but comprehensive
+4. Provide a short and concise answer (e.g. yes, no, a few words), followed by two empty lines and a brief explanation if needed.
 5. If the question is in Hebrew, answer in Hebrew. If in English, answer in English
-6. For insurance-related questions, provide specific details from the documents when available
+6. For insurance-related questions, provide specific details from the documents when available.
+7. Examples for a good answers (hebrew): "כן.
+
+לפי המסמך [1], יש כיסוי ביטוחי במקרה של פציעה אישית עבור מבוטחים בפוליסת ביטוח בריאות מקיפה."
 
 Answer:"""
     
