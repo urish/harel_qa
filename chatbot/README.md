@@ -28,14 +28,17 @@
    ```
 
 4. Run milvus db
-   Note: https://milvus.io/docs/install_standalone-docker.md
+   
+   Linux/Mac: https://milvus.io/docs/install_standalone-docker.md
 
    ```bash
    # to start a milvus db instance
    bash standalone_embed.sh start
    ```
 
-4. Run the script to process the documents and set up the vector store:
+   Windows + Docker: https://milvus.io/docs/install_standalone-windows.md
+
+5. Run the script to process the documents and set up the vector store:
 
    *Option 1:*
    Indexing whole documents (to local db)
@@ -51,7 +54,7 @@
    python push_docs_to_milvus.py --input-dir ../data/data-processed-with-pages --collection-name documents
    ```
    
-5. Start the chatbot:
+6. Start the chatbot:
 
    ```bash
      python chatbot.py
