@@ -67,8 +67,9 @@ def setup_embeddings(model_name: str = "paraphrase-multilingual-mpnet-base-v2"):
     """Setup the embedding function for vector search."""
     return SentenceTransformerEmbeddings(model_name=model_name)
 
-def search_documents(collection_name: str, question: str, embedding_function, 
-                    k: int = 5, milvus_host: str = "localhost", milvus_port: int = 19530) -> List[Document]:
+def search_documents(collection_name: str, question: str, category: Optional[str],
+                     embedding_function, k: int = 5, milvus_host: str = "localhost", 
+                     milvus_port: int = 19530) -> List[Document]:
     """Search for relevant documents in Milvus collection."""
     try:
         # Connect to existing Milvus collection
@@ -77,14 +78,18 @@ def search_documents(collection_name: str, question: str, embedding_function,
             collection_name=collection_name,
             connection_args={"host": milvus_host, "port": milvus_port}
         )
-        
+
         # Perform similarity search
         print(f"Searching collection '{collection_name}' for: '{question}'")
-        results = vector_store.similarity_search(question, k=k)
-        
+        results = vector_store.similarity_search(
+            question,
+            k=k,
+            expr=f'category == "{category}"' if category else None,
+        )
+
         print(f"Found {len(results)} relevant documents")
         return results
-        
+
     except Exception as e:
         print(f"Error searching documents: {e}")
         return []
@@ -154,8 +159,16 @@ def query_rag(question: str, collection_name: str, embedding_function, llm,
     """Perform RAG query: search, create context, and generate answer."""
     
     # 1. Search for relevant documents
-    documents = search_documents(collection_name, question, embedding_function, INITIAL_RETRIEVAL_K, milvus_host, milvus_port)
-    
+    documents = search_documents(
+        collection_name, 
+        question, 
+        category,
+        embedding_function, 
+        INITIAL_RETRIEVAL_K, 
+        milvus_host, 
+        milvus_port
+    )
+
     reranked_documents = rerank_documents(
         query=question,
         retrieved_docs=documents,
