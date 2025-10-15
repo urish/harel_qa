@@ -1,4 +1,5 @@
 """Server module for running the FastAPI application with static file serving."""
+
 from pathlib import Path
 import uvicorn
 from fastapi.staticfiles import StaticFiles
@@ -6,9 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from api import create_app
 
 
-def run_server(host: str = "0.0.0.0", port: int = 8000):
+def run_server(app, host: str = "0.0.0.0", port: int = 8000):
     """Run the FastAPI server with static file serving."""
-    app = create_app()
 
     # Mount static files directory for web interface
     static_dir = Path(__file__).parent / "web"

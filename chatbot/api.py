@@ -1,10 +1,10 @@
 """FastAPI application for the Harel chatbot."""
+
 from typing import List
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
-from chatbot import graph
+from rag_query import setup_embeddings, query_rag
 
 
 class ChatRequest(BaseModel):
@@ -18,12 +18,12 @@ class ChatResponse(BaseModel):
     question: str
 
 
-def create_app() -> FastAPI:
+def create_app(embeddings_function, llm) -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI(
         title="Harel Insurance Chatbot API",
         description="RAG-based chatbot for Harel insurance products",
-        version="1.0.0"
+        version="1.0.0",
     )
 
     # Enable CORS for local development
@@ -49,17 +49,22 @@ def create_app() -> FastAPI:
     async def chat(request: ChatRequest) -> ChatResponse:
         """Process a chat question and return an answer."""
         try:
-            response = graph.invoke({
-                "question": request.question,
-                "category": request.category,
-            })
+            response = query_rag(
+                question=request.question,
+                collection_name="documents",
+                category=request.category,
+                embedding_function=embeddings_function,
+                llm=llm,
+            )
 
             return ChatResponse(
-                answer=response["answer"],
+                answer=response.answer,
                 category=request.category,
-                question=request.question
+                question=request.question,
             )
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error processing question: {str(e)}")
+            raise HTTPException(
+                status_code=500, detail=f"Error processing question: {str(e)}"
+            )
 
     return app
