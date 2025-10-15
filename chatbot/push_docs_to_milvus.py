@@ -67,14 +67,17 @@ def parse_txt_file(file_path: pathlib.Path) -> List[Document]:
             continue
             
         source_path, doc_type, page_number = extract_metadata_from_header(f"<<<SOURCE:{header}>>>")
-        
+
+        category = source_path.split('/')[-3]
+    
         doc = Document(
             metadata={
                 "source_file": source_path,
                 "doc_type": doc_type,
                 "page_number": page_number,
                 "file_name": file_path.name,
-                "section_index": i
+                "section_index": i,
+                "category": category,
             },
             page_content=section.strip(),
             source_file=source_path,
